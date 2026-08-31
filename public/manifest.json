@@ -1,0 +1,13 @@
+{
+  "name": "XO Arena — เกม XO ออนไลน์",
+  "short_name": "XO Arena",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0b1020",
+  "theme_color": "#0b1020",
+  "orientation": "portrait",
+  "lang": "th",
+  "icons": [
+    { "src": "/icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
