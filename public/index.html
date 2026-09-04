@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="th" data-theme="dark" data-anim="on" data-style="neon">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0b1020">
+  <meta name="description" content="XO Arena — เกม XO ออนไลน์พร้อม AI, ห้องส่วนตัว, Elo และ PWA">
+  <meta name="color-scheme" content="dark light">
+  <title>XO Arena — เกม XO ออนไลน์</title>
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="/icons/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div id="authGate" class="auth-gate">
+  <div class="auth-card card">
+    <div class="brand-mark auth-mark" aria-hidden="true"><span>×</span><span>○</span></div>
+    <span class="eyebrow">XO ARENA ACCOUNT</span>
+    <h1 id="authTitle">เข้าสู่ระบบ</h1>
+    <p id="authHint" class="muted">ต้องเข้าสู่ระบบก่อนจึงจะเล่นเกมได้</p>
+    <form id="loginForm" class="auth-form" autocomplete="on">
+      <label>ชื่อผู้ใช้<input id="loginName" class="input" maxlength="16" minlength="3" required autocomplete="username" placeholder="เช่น player_01"></label>
+      <label>รหัสผ่าน<input id="loginPassword" class="input" type="password" minlength="6" required autocomplete="current-password" placeholder="อย่างน้อย 6 ตัว"></label>
+      <button class="btn primary big" type="submit">เข้าสู่ระบบ</button>
+    </form>
+    <form id="registerForm" class="auth-form hidden" autocomplete="on">
+      <label>ชื่อผู้ใช้<input id="registerName" class="input" maxlength="16" minlength="3" required autocomplete="username" placeholder="3–16 ตัวอักษร"></label>
+      <label>รหัสผ่าน<input id="registerPassword" class="input" type="password" minlength="6" required autocomplete="new-password" placeholder="อย่างน้อย 6 ตัว"></label>
+      <label>ยืนยันรหัสผ่าน<input id="registerPassword2" class="input" type="password" minlength="6" required autocomplete="new-password" placeholder="พิมพ์อีกครั้ง"></label>
+      <button class="btn primary big" type="submit">สมัครสมาชิก</button>
+    </form>
+    <button id="authSwitch" class="btn ghost auth-switch" type="button">ยังไม่มีบัญชี? สมัครสมาชิก</button>
+    <p id="authError" class="auth-error" role="alert"></p>
+  </div>
+</div>
+
+<div id="app">
+  <header class="topbar shell">
+    <a class="brand" href="#" aria-label="XO Arena หน้าหลัก" onclick="document.getElementById('btnLeaveGame').click();return false;">
+      <span class="brand-mark" aria-hidden="true"><span>×</span><span>○</span></span>
+      <span><strong>XO ARENA</strong><small>Play. Think. Win.</small></span>
+    </a>
+    <div class="top-actions" aria-label="การตั้งค่าด่วน">
+      <span class="status-pill"><i id="netDot" class="net-dot"></i><span id="onlineCount">● 0 ออนไลน์</span></span>
+      <button id="miniAvatar" class="icon-btn avatar-btn" type="button" title="โปรไฟล์">🐱</button>
+      <button id="btnTheme" class="icon-btn" type="button" title="เปลี่ยนธีม">🌙</button>
+      <button id="btnSound" class="icon-btn" type="button" title="เสียง">🔊</button>
+      <button id="btnLang" class="icon-btn lang-btn" type="button" title="ภาษา">TH</button>
+    </div>
+  </header>
+
+  <main class="shell main-shell">
+    <section id="screen-home" class="screen active">
+      <div class="hero">
+        <div class="hero-badge">⚡ ONLINE • PWA • AI</div>
+        <h1>สนาม XO ที่<br><span>พร้อมสำหรับทุกเกม</span></h1>
+        <p class="hero-copy">เล่นกับ AI • ดวลคนจริง • สร้างห้องกับเพื่อน • เก็บ Elo และความสำเร็จ</p>
+      </div>
+
+      <div class="home-layout">
+        <div class="card profile-card">
+          <div class="profile-main">
+            <div class="avatar-big" id="myAvatar">🐱</div>
+            <div class="grow">
+              <label class="eyebrow" for="myName">โปรไฟล์ผู้เล่น</label>
+              <input id="myName" class="input" maxlength="16" placeholder="ชื่อในระบบ" autocomplete="username" readonly>
+              <div class="profile-meta"><span id="myElo">— Elo</span><span>•</span><span>14 Achievements</span></div>
+            </div>
+          </div>
+          <div class="avatar-picker" id="avatarPicker" aria-label="เลือกอวตาร"></div>
+          <button id="btnLogout" class="btn danger auth-logout" type="button">ออกจากระบบ</button>
+        </div>
+
+        <div class="card quick-card">
+          <div class="section-head"><div><span class="eyebrow">QUICK PLAY</span><h2>เลือกวิธีเล่น</h2></div><span class="section-icon">🎮</span></div>
+          <div class="menu-grid">
+            <button id="btnBot" class="menu-btn primary" data-i18n="play_bot"><span class="menu-icon">🤖</span><span><b>เล่นกับบอท</b><small>4 ระดับความยาก</small></span><em>›</em></button>
+            <button id="btnOnline" class="menu-btn" data-i18n="play_online"><span class="menu-icon">🌐</span><span><b>แข่งออนไลน์</b><small>จับคู่ด้วย Elo</small></span><em>›</em></button>
+            <button id="btnCreateRoom" class="menu-btn" data-i18n="create_room"><span class="menu-icon">🔒</span><span><b>สร้างห้องส่วนตัว</b><small>ชวนเพื่อนด้วยรหัส</small></span><em>›</em></button>
+            <button id="btnJoinRoom" class="menu-btn" data-i18n="join_room"><span class="menu-icon">🔑</span><span><b>เข้าห้องด้วยรหัส</b><small>ใส่โค้ด 5 ตัว</small></span><em>›</em></button>
+            <button id="btnLocal" class="menu-btn"><span class="menu-icon">👥</span><span><b>เล่น 2 คนในเครื่อง</b><small>ไม่ต้องต่อเน็ต</small></span><em>›</em></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="home-tools">
+        <button id="btnStats" class="tool-card"><span>📊</span><div><b>สถิติ & ความสำเร็จ</b><small>ดูผลงานและประวัติการเล่น</small></div><em>›</em></button>
+        <button id="btnLeaderboard" class="tool-card"><span>🏆</span><div><b>อันดับโลก</b><small>จัดอันดับตาม Elo</small></div><em>›</em></button>
+        <button id="btnSettings" class="tool-card"><span>⚙️</span><div><b>ตั้งค่า</b><small>ธีม ภาษา เสียง กระดาน</small></div><em>›</em></button>
+      </div>
+
+      <p class="footer-note">XO Arena • เล่นสนุกได้ทั้งออนไลน์และออฟไลน์</p>
+    </section>
+
+    <section id="screen-setup" class="screen">
+      <div class="page-head"><button class="btn ghost back" data-back data-i18n="back">← กลับ</button><div><span class="eyebrow">MATCH SETUP</span><h2 id="setupTitle">ตั้งค่าเกม</h2></div></div>
+      <div class="setup-stack">
+        <div class="card setup-card"><h3 data-i18n="mode">รูปแบบกระดาน</h3><div class="chip-row" id="presetRow"></div></div>
+        <div id="difficultyBlock" class="card setup-card"><h3 data-i18n="difficulty">ระดับความยาก</h3><div class="chip-row" id="difficultyRow"></div></div>
+        <div id="firstBlock" class="card setup-card"><h3 data-i18n="first">ใครเริ่มก่อน</h3><div class="radio-row">
+          <label><input type="radio" name="first" value="x" checked><span>✕ ฉันเริ่ม</span></label>
+          <label><input type="radio" name="first" value="o"><span>◯ คู่แข่งเริ่ม</span></label>
+          <label><input type="radio" name="first" value="random"><span>🎲 สุ่ม</span></label>
+        </div></div>
+        <div id="friendlyBlock" class="card setup-card hidden"><label class="switch-row"><input type="checkbox" id="friendlyToggle" checked><span><b>โหมดกระชับมิตร</b><small>ห้องนี้ไม่คิดคะแนน Elo</small></span></label></div>
+        <button id="btnStartSetup" class="btn primary big" data-i18n="start">เริ่มเกม</button>
+      </div>
+    </section>
+
+    <section id="screen-lobby" class="screen">
+      <div class="lobby card">
+        <div class="lobby-orb"><span>×</span><span>○</span></div>
+        <span class="eyebrow">MATCHMAKING</span>
+        <h2 id="lobbyStatus">กำลังหาคู่แข่ง...</h2>
+        <p class="muted">เวลารอ <span id="lobbyTimer">0:00</span></p>
+        <div id="lobbyCodeBox" class="code-box hidden"><span class="eyebrow">ROOM CODE</span><div class="code" id="lobbyCode">-----</div><div class="row"><button id="btnCopyCode" class="btn ghost" data-i18n="copy">คัดลอก</button><button id="btnShareCode" class="btn ghost" data-i18n="share">แชร์</button></div></div>
+        <button id="btnLobbyCancel" class="btn danger" data-i18n="cancel">ยกเลิก</button>
+      </div>
+    </section>
+
+    <section id="screen-game" class="screen">
+      <div class="game-toolbar"><button id="btnLeaveGame" class="btn ghost">← ออกจากเกม</button><div class="game-badge">XO ARENA</div><div class="room-badge" id="roomBadge">LIVE</div></div>
+      <div class="game-head">
+        <div class="player" id="pX"><span class="ava" id="pXAvatar">🐱</span><div><small>X</small><b id="pXName">ผู้เล่น</b><span class="player-sub" id="pXSub">1000</span></div></div>
+        <div class="vs">VS</div>
+        <div class="player right" id="pO"><div><small>O</small><b id="pOName">บอท</b><span class="player-sub" id="pOSub">—</span></div><span class="ava" id="pOAvatar">🤖</span></div>
+      </div>
+      <div class="game-meta"><span id="roundLabel">รอบ 1</span><span id="turnLabel">ตาคุณ</span><span id="scoreLine"></span></div>
+      <div id="timerWrap" class="timer"><div class="timer-track"><div id="timerBar" class="timer-bar"></div></div><span id="timerText">—</span></div>
+      <div class="board-shell"><div class="board-wrap"><div id="board" class="board" style="--n:3" aria-label="กระดาน XO"></div></div></div>
+      <p class="move-status" id="moveLog"></p>
+      <div class="controls">
+        <button id="btnHint" class="btn ghost" data-i18n="hint">💡 ใบ้</button><button id="btnUndo" class="btn ghost" data-i18n="undo">↩️ ย้อน</button><button id="btnResign" class="btn warn" data-i18n="resign">🏳️ ยอมแพ้</button><button id="btnRematch" class="btn primary hidden" data-i18n="rematch">🔁 เล่นอีกครั้ง</button>
+      </div>
+      <div id="chatPanel" class="chat hidden"><div class="chat-head"><span>💬 Chat</span><small>ส่งข้อความหรืออีโมจิ</small></div><div id="emoteRow" class="emote-row"></div><div id="chatLog" class="chat-log"></div><div class="chat-input"><input id="chatInput" class="input" maxlength="200" placeholder="พิมพ์ข้อความ..." autocomplete="off"><button id="btnChatSend" class="btn primary" data-i18n="send">ส่ง</button></div></div>
+      <div id="resultOverlay" class="result-overlay hidden"><div id="confetti" class="confetti"></div><div class="result-card"><div id="resultIcon" class="result-icon">🏆</div><span class="eyebrow">MATCH RESULT</span><h2 id="resultTitle">คุณชนะ!</h2><div id="resultDesc" class="muted"></div><div id="resultAchievements"></div><div class="row"><button class="btn primary" onclick="document.getElementById('btnRematch').click()">🔁 เล่นอีกครั้ง</button><button class="btn ghost" onclick="document.getElementById('btnLeaveGame').click()">🏠 หน้าหลัก</button></div></div></div>
+    </section>
+
+    <section id="screen-stats" class="screen"><div class="page-head"><button class="btn ghost back" data-back data-i18n="back">← กลับ</button><div><span class="eyebrow">YOUR PROGRESS</span><h2>📊 สถิติของคุณ</h2></div></div><div id="statsGrid" class="stats-grid"></div><div class="section-title"><span>🏅</span><h3>ความสำเร็จ</h3></div><div id="achievementList" class="ach-list"></div><div class="section-title"><span>🕘</span><h3>ประวัติล่าสุด</h3></div><div id="historyList" class="hist-list"></div></section>
+
+    <section id="screen-leaderboard" class="screen"><div class="page-head"><button class="btn ghost back" data-back data-i18n="back">← กลับ</button><div><span class="eyebrow">GLOBAL RANK</span><h2>🏆 อันดับโลก</h2></div><button id="btnRefreshLb" class="btn ghost">🔄 รีเฟรช</button></div><div id="leaderboardList" class="lb-list"></div></section>
+
+    <section id="screen-settings" class="screen"><div class="page-head"><button class="btn ghost back" data-back data-i18n="back">← กลับ</button><div><span class="eyebrow">PREFERENCES</span><h2>⚙️ ตั้งค่า</h2></div></div><div class="settings"><label class="set-row"><span><b>ธีม</b><small>มืดหรือสว่าง</small></span><select id="setTheme" class="input"><option value="dark">มืด</option><option value="light">สว่าง</option></select></label><label class="set-row"><span><b>สไตล์กระดาน</b><small>เลือกรูปแบบที่ชอบ</small></span><select id="setStyle" class="input"><option value="neon">นีออน</option><option value="classic">คลาสสิก</option><option value="paper">กระดาษ</option></select></label><label class="set-row"><span><b>ภาษา</b><small>ไทย / English</small></span><select id="setLang" class="input"><option value="th">ไทย</option><option value="en">English</option></select></label><label class="set-row"><span><b>จับเวลาต่อตา</b><small>ใช้กับโหมดออฟไลน์</small></span><select id="setTimer" class="input"><option value="0">ปิด</option><option value="10">10 วินาที</option><option value="20">20 วินาที</option><option value="30">30 วินาที</option></select></label><label class="set-row"><span><b>เสียง</b><small>เสียงตอบสนองในเกม</small></span><input type="checkbox" id="setSound"></label><label class="set-row"><span><b>ระดับเสียง</b><small>ปรับความดัง</small></span><input type="range" id="setVolume" min="0" max="1" step="0.05"></label><label class="set-row"><span><b>แอนิเมชัน</b><small>เอฟเฟกต์การเคลื่อนไหว</small></span><input type="checkbox" id="setAnim"></label><button id="btnResetData" class="btn danger" data-i18n="reset">ล้างข้อมูล</button></div><p class="shortcut-note">คีย์ลัด: <b>H</b> ใบ้ • <b>U</b> ย้อน • <b>1–9</b> ลงช่อง • <b>Esc</b> ออกจากเกม</p></section>
+  </main>
+
+  <div id="toasts" class="toasts" aria-live="polite"></div>
+  <div id="modal" class="modal hidden" role="dialog" aria-modal="true"><div class="modal-card"><span class="eyebrow">XO ARENA</span><h3 id="modalTitle"></h3><div id="modalBody"></div><input id="modalInput" class="input hidden"><div id="modalActions" class="row"></div></div></div>
+</div>
+<script src="/socket.io/socket.io.js"></script><script src="/js/engine.js"></script><script src="/js/ai.js"></script><script src="/js/storage.js"></script><script src="/js/audio.js"></script><script src="/js/net.js"></script><script src="/js/ui.js"></script><script src="/js/app.js"></script>
+</body>
+</html>
