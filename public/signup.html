@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="th" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0b1020">
+  <meta name="description" content="สมัครสมาชิก XO Arena">
+  <title>สมัครสมาชิก — XO Arena</title>
+  <link rel="icon" href="/icons/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="auth-page" data-mode="signup">
+  <div class="auth-page-shell">
+    <div class="auth-top"><button id="goHome" class="btn ghost" type="button">← หน้าแรก</button></div>
+    <div class="auth-card card">
+      <div class="brand-mark auth-mark" aria-hidden="true"><span>×</span><span>○</span></div>
+      <span class="eyebrow">XO ARENA ACCOUNT</span>
+      <h1>สมัครสมาชิก</h1>
+      <p class="muted">สร้างบัญชีเพื่อเก็บ Elo สถิติ และข้อมูลการเล่น</p>
+      <form id="authForm" class="auth-form" autocomplete="on" novalidate>
+        <label>ชื่อผู้ใช้
+          <input id="name" class="input" maxlength="16" minlength="3" required autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="3–16 ตัวอักษร ตัวเลข หรือ _">
+        </label>
+        <label>รหัสผ่าน
+          <input id="password" class="input" type="password" minlength="6" required autocomplete="new-password" placeholder="อย่างน้อย 6 ตัว">
+        </label>
+        <label>ยืนยันรหัสผ่าน
+          <input id="password2" class="input" type="password" minlength="6" required autocomplete="new-password" placeholder="พิมพ์รหัสผ่านอีกครั้ง">
+        </label>
+        <div class="auth-actions">
+          <button id="authSubmit" class="btn primary big" type="submit">สมัครสมาชิก</button>
+        </div>
+      </form>
+      <button id="authSwitch" class="btn ghost auth-switch" type="button">มีบัญชีอยู่แล้ว? เข้าสู่ระบบ</button>
+      <p id="authError" class="auth-error" role="alert" aria-live="polite"></p>
+      <p class="auth-note">URL สมัครสมาชิก: /SignUp</p>
+    </div>
+  </div>
+  <script src="/auth.js"></script>
+</body>
+</html>
